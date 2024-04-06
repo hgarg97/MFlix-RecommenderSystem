@@ -1,0 +1,73 @@
+<!-- templates/home.html -->
+
+{% include 'title_bar.html' %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot_style.css') }}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender - Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add your custom CSS here -->
+</head>
+<body>
+    <div class="container">
+        <div class="search-container">
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search for a movie">
+                </div>
+            </form>
+        </div>
+
+        <div class="section-container">
+            <h3>Your Top 5 Movie Recommendations</h3>
+            <div class="row">
+                {% for _ in range(5) %}
+                <div class="col-md-2">
+                    <div class="card mb-3">
+                        <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Movie {{ loop.index }}</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section-container">
+            <h3>Global Top 5</h3>
+            <div class="row">
+                {% for _ in range(5) %}
+                <div class="col-md-2">
+                    <div class="card mb-3">
+                        <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">Movie {{ loop.index }}</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include chatbot HTML -->
+    {% include 'chatbot.html' %}
+
+    <!-- Your existing scripts here -->
+    <script>
+        document.getElementById('toggleChatbotBtn').addEventListener('click', function() {
+            var chatbotBody = document.getElementById('chatbot-body');
+            if (chatbotBody.style.display === 'none') {
+                chatbotBody.style.display = 'block';
+            } else {
+                chatbotBody.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
