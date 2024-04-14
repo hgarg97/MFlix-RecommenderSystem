@@ -1,5 +1,3 @@
-<!-- templates/home.html -->
-
 {% include 'title_bar.html' %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot_style.css') }}">
 
@@ -11,6 +9,7 @@
     <title>Movie Recommender - Home</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Add your custom CSS here -->
+    <!-- Search bar for movie search -->
 </head>
 <body>
     <div class="container">
@@ -22,15 +21,17 @@
             </form>
         </div>
 
+        <!-- Section for user's top 5 movie recommendations -->
         <div class="section-container">
             <h3>Your Top 5 Movie Recommendations</h3>
             <div class="row">
-                {% for _ in range(5) %}
+                <!-- Loop over movie data to populate movie cards -->
+                {% for movie in movies_data_your5 %}
                 <div class="col-md-2">
                     <div class="card mb-3">
-                        <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+                        <img src="{{ movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
                         <div class="card-body">
-                            <h5 class="card-title">Movie {{ loop.index }}</h5>
+                            <h5 class="card-title">{{ movie.title }}</h5>
                         </div>
                     </div>
                 </div>
@@ -38,15 +39,17 @@
             </div>
         </div>
 
+        <!-- Section for global top 5 movies -->
         <div class="section-container">
             <h3>Global Top 5</h3>
             <div class="row">
-                {% for _ in range(5) %}
+                <!-- Loop over movie data to populate movie cards -->
+                {% for movie in movies_data_rec5 %}
                 <div class="col-md-2">
                     <div class="card mb-3">
-                        <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="...">
+                        <img src="{{ movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
                         <div class="card-body">
-                            <h5 class="card-title">Movie {{ loop.index }}</h5>
+                            <h5 class="card-title">{{ movie.title }}</h5>
                         </div>
                     </div>
                 </div>
@@ -58,7 +61,7 @@
     <!-- Include chatbot HTML -->
     {% include 'chatbot.html' %}
 
-    <!-- Your existing scripts here -->
+    <!-- Script for toggling the chatbot -->
     <script>
         document.getElementById('toggleChatbotBtn').addEventListener('click', function() {
             var chatbotBody = document.getElementById('chatbot-body');

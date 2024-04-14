@@ -1,0 +1,12 @@
+Dataset/movies_metadata.csv
+Dataset/keywords.csv
+Dataset/links_small.csv
+Dataset/links.csv
+Dataset/ratings_small.csv
+Dataset/ratings.csv
+Dataset/credits.csv
+Dataset/modiified/metadata_dropnulls.csv
+Dataset/modiified/Movies_data(3660).xlsx
+src/mflix-app/~$movies_data.xlsx
+src/mflix-app/movies_data.xlsx
+src/Notebooks/data_read.ipynb
