@@ -14,7 +14,7 @@ users = {
 authenticated = False
 
 # Load data from Excel file into a pandas DataFrame
-movies_df = pd.read_excel('movies_data.xlsx')
+movies_df = pd.read_excel('static/movies_data.xlsx')
 
 # Define a function to fetch movie details by movieId
 def get_movie_details(movie_id):
