@@ -40,8 +40,8 @@ def home():
         if email in users and users[email] == password:
             authenticated = True
             # Assuming you have a list of movie IDs you want to display on the home page
-            movie_ids_your5 = [2, 186, 20, 352, 34]  # Example movie IDs
-            movie_ids_rec5 = [364, 480, 527, 589, 748]  # Another set of example movie IDs
+            movie_ids_your5 = [2, 186, 20, 352, 748]  # Example movie IDs
+            movie_ids_rec5 = [3450, 3629, 5096, 5720, 58559]  # Another set of example movie IDs
             
             # Fetch movie details for each set of movie IDs
             movies_data_your5 = [get_movie_details(movie_id) for movie_id in movie_ids_your5]
