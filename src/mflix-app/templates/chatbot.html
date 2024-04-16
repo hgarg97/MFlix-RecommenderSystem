@@ -1,7 +1,12 @@
+<script src="https://kit.fontawesome.com/5b1cd61553.js" crossorigin="anonymous"></script>
+
+<!-- Chatbot container HTML -->
 <div class="chatbot-container" id="chatbot-container">
     <div class="chatbot-title-bar">
-        <h4 class="chatbot-title">Chatbot</h4>
-        <button class="btn btn-sm btn-light" id="toggleChatbotBtn">-</button>
+        <h4 class="chatbot-title">CavBot</h4>
+        <button class="btn btn-sm btn-light" id="toggleChatbotBtn">
+            <i class="fas fa-chevron-up" id="chevronIcon"></i>
+        </button>
     </div>
     <div class="chatbot-body" id="chatbot-body">
         <ul class="chatbot-messages">
@@ -19,3 +24,17 @@
         </div>
     </div>
 </div>
+
+<!-- JavaScript code for toggling the chevron icon -->
+<script>
+    // Get references to the toggle button and chevron icon
+    var toggleBtn = document.getElementById('toggleChatbotBtn');
+    var chevronIcon = document.getElementById('chevronIcon');
+
+    // Add click event listener to the toggle button
+    toggleBtn.addEventListener('click', function() {
+        // Toggle the rotation class of the chevron icon
+        chevronIcon.classList.toggle('fa-chevron-up');
+        chevronIcon.classList.toggle('fa-chevron-down');
+    });
+</script>
