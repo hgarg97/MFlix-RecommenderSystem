@@ -26,10 +26,11 @@
 
         <!-- Section for user's top 5 movie recommendations -->
         <div class="section-container">
-            <h3 style="color: aquamarine;">Your Top 5 Recommendations</h3>
+            <h3 style="color: blanchedalmond;"><i class="fa-solid fa-user"></i> Your Top 5 Recommendations</h3>
             <div class="row">
                 <!-- Loop over movie data to populate movie cards -->
-                {% for movie in movies_data_your5 %}
+                {% for id in movie_ids_your5 %}
+                {% set movie = get_movie_details(id) %}
                 <div class="col-md-2">
                     <a href="{{ url_for('movie_details', movie_id=movie.movieId) }}">
                         <div class="card mb-3">
@@ -46,10 +47,11 @@
 
         <!-- Section for global top 5 movies -->
         <div class="section-container">
-            <h3 style="color: blanchedalmond;">Global Top 5 Recommendations</h3>
+            <h3 style="color: blanchedalmond;"><i class="fa-solid fa-globe"></i> Global Top 5 Recommendations</h3>
             <div class="row">
                 <!-- Loop over movie data to populate movie cards -->
-                {% for movie in movies_data_rec5 %}
+                {% for id in movie_ids_rec5 %}
+                {% set movie = get_movie_details(id) %}
                 <div class="col-md-2">
                     <a href="{{ url_for('movie_details', movie_id=movie.movieId) }}">
                         <div class="card mb-3">

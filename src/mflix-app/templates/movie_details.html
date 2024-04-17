@@ -1,4 +1,5 @@
 {% include 'title_bar.html' %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,6 +34,37 @@
                 <h5 style="color: rgb(228, 209, 184);">Genres : {{ movie.genres }}</h5>
                 <h5 style="color: rgb(228, 209, 184);">Cast : {{ movie.cast }}</h5>
             </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr style="border-top: 2px solid rgb(228, 209, 184);">
+            </div>
+        </div>
+        <div class="row justify-content-center"> <!-- Aligning "More Like This" heading to center -->
+            <div class="col-md-8 text-center"> <!-- Using text-center class to center the text -->
+                <h3 style="color: rgb(228, 176, 108);"><i class="fa-solid fa-film"></i> Movies Like This</h3>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr style="border-top: 2px solid rgb(228, 209, 184);">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- Loop over movie data to populate movie cards -->
+            {% for movie_id in more_like_this_dict[movie.movieId] %}
+            {% set similar_movie = get_movie_details(movie_id) %}
+            <div class="col-md-2">
+                <a href="{{ url_for('movie_details', movie_id=similar_movie.movieId) }}">
+                    <div class="card mb-3">
+                        <img src="{{ similar_movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ similar_movie.title }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </body>
