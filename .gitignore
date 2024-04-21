@@ -10,3 +10,6 @@ Dataset/modiified/Movies_data(3660).xlsx
 src/mflix-app/~$movies_data.xlsx
 src/mflix-app/movies_data.xlsx
 src/Notebooks/data_read.ipynb
+src/mflix-app/static/encodings_description.pickle
+src/mflix-app/static/encodings_title.pickle
+src/mflix-app/static/model.pickle

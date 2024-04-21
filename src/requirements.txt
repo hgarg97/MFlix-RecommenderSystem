@@ -1,2 +1,6 @@
 flask
 openpyxl
+torch
+numpy
+pandas
+sentence-transformers
