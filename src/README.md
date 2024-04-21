@@ -35,3 +35,13 @@
    ```
 
 3. Open your web browser and navigate to `http://127.0.0.1:5000/` to access the application.
+
+## Installing Embeddings
+
+To use pre-trained embeddings, follow these steps:
+
+1. Download the pre-trained embeddings from the provided Google Drive link: [Embeddings](https://drive.google.com/drive/folders/1Pz1mdHde2f7k1ODr8QlKTshbVzgz9jJR?usp=sharing).
+
+2. Once downloaded, Copy the files and paste them into the `static` folder of the MFlix-RecommenderSystem/src/mflix-app project directory.
+
+3. The embeddings will now be available for use within the Flask application.
