@@ -103,10 +103,15 @@
     document.getElementById('chat-form').addEventListener('submit', submitQuestion);
 
     // Function to fetch the initial chatbot message when the page is loaded
-    function fetchInitialChatbotMessage() {
+    function fetchInitialChatbotMessage(initialMessage) {
+        // Create a new FormData object
+        var formData = new FormData();
+        // Append the initial message to the FormData object
+        formData.append('user_input', initialMessage);
+
         fetch('/cavbot', {
             method: 'POST',
-            body: new FormData()
+            body: formData
         })
         .then(response => response.json())
         .then(data => {
@@ -118,7 +123,10 @@
         .catch(error => console.error('Error:', error));
     }
 
-    document.addEventListener('DOMContentLoaded', fetchInitialChatbotMessage);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Call fetchInitialChatbotMessage with "Hi" as the initial message
+        fetchInitialChatbotMessage("Hi");
+    });
 
 </script>
 
