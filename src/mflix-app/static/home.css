@@ -52,6 +52,6 @@
 /* Adjust button hover and focus styles */
 .search-container button[type="submit"]:hover,
 .search-container button[type="submit"]:focus {
-    background-color: #155d7c;
+    background-color: #155E7E;
     outline: none;
 }
