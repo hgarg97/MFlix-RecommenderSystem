@@ -4,3 +4,6 @@ torch
 numpy
 pandas
 sentence-transformers
+google-generativeai
+python-dotenv
+google-ai-generativelanguage

@@ -1,4 +1,5 @@
 <script src="https://kit.fontawesome.com/5b1cd61553.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot_style.css') }}">
 
 <!-- Chatbot container HTML -->
 <div class="chatbot-container" id="chatbot-container">
@@ -9,27 +10,31 @@
         </button>
     </div>
     <div class="chatbot-body" id="chatbot-body">
-        <ul class="chatbot-messages">
-            <!-- Existing chatbot messages -->
-            <li class="chatbot-message">Welcome to MFlix Movie Recommender!</li>
-            <li class="chatbot-message">How can I assist you today?</li>
-            <!-- Example user message -->
-            <li class="chatbot-message user-message">Sure, I'm looking for action movies</li>
-            <!-- More chatbot messages and user messages can be added here -->
+        <ul class="chatbot-messages" id="chat-history">
+            <!-- Chat history will be displayed here -->
         </ul>
-        <!-- Input field for user queries -->
-        <div class="chatbot-input">
-            <input type="text" id="userInput" placeholder="Type your message...">
-            <button class="btn btn-primary" id="sendMessageBtn" style="background-color:#1F6E8E;">Send</button>
-        </div>
+        <!-- Loader -->
+        <div id="loader" class="loader"></div>
+        <!-- Form for user input -->
+        <form id="chat-form">
+            <div class="chatbot-input">
+                <input type="text" id="userInput" name="user_input" placeholder="Type your message..." class="input-field">
+                <button type="submit" class="btn btn-primary send-button" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- JavaScript code for toggling the chevron icon -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+
 <script>
+    //  JavaScript code for toggling the chevron icon
     // Get references to the toggle button and chevron icon
     var toggleBtn = document.getElementById('toggleChatbotBtn');
     var chevronIcon = document.getElementById('chevronIcon');
+    var loader = document.getElementById('loader');
+    var sendBtn = document.getElementById('sendBtn');
 
     // Add click event listener to the toggle button
     toggleBtn.addEventListener('click', function() {
@@ -37,4 +42,83 @@
         chevronIcon.classList.toggle('fa-chevron-up');
         chevronIcon.classList.toggle('fa-chevron-down');
     });
+
+    // Function to render Markdown-formatted text
+    function renderMarkdown(text) {
+        try {
+            // Convert Markdown text to HTML
+            var converter = new showdown.Converter();
+            var html = converter.makeHtml(text);
+            return html;
+        } catch (error) {
+            console.error('Error rendering Markdown:', error);
+            return text; // Return original text if there is an error
+        }
+    }
+
+    // Function to handle form submission
+    function submitQuestion(event) {
+        event.preventDefault();
+        var form = event.target;
+        var formData = new FormData(form);
+        var userInput = formData.get('user_input');
+
+        // Show loader
+        loader.style.display = 'block';
+        // Disable send button
+        sendBtn.disabled = true;
+
+        // Send question to Flask route
+        fetch('/cavbot', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+             // Hide loader
+             loader.style.display = 'none';
+            // Enable send button
+            sendBtn.disabled = false;
+            // Convert Unicode escape sequences to actual emojis
+            var botResponse = data.response.replace(/\\u[\dA-F]{4}/gi, match => String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16)));
+
+            // Render bot's response from Markdown to HTML
+            var botResponseHTML = renderMarkdown(botResponse);
+
+            // Display bot's response in chat history
+            var chatHistory = document.getElementById('chat-history');
+            chatHistory.innerHTML += `<li class="chatbot-message user-message">${userInput}</li>`;
+            chatHistory.innerHTML += `<li class="chatbot-message bot-message">${botResponseHTML}</li>`;
+
+            // Scroll to bottom of chat body
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // Clear input field
+            document.getElementById('userInput').value = '';
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Add event listener to form
+    document.getElementById('chat-form').addEventListener('submit', submitQuestion);
+
+    // Function to fetch the initial chatbot message when the page is loaded
+    function fetchInitialChatbotMessage() {
+        fetch('/cavbot', {
+            method: 'POST',
+            body: new FormData()
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Render and display the initial chatbot message in chat history
+            var initialBotResponse = renderMarkdown(data.response);
+            var chatHistory = document.getElementById('chat-history');
+            chatHistory.innerHTML += `<li class="chatbot-message bot-message">${initialBotResponse}</li>`;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchInitialChatbotMessage);
+
 </script>
+
