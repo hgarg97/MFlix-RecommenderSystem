@@ -18,7 +18,7 @@
         <!-- Form for user input -->
         <form id="chat-form">
             <div class="chatbot-input">
-                <input type="text" id="userInput" name="user_input" placeholder="Say 'Hi' to Chat ..." class="input-field">
+                <input type="text" id="userInput" name="user_input" placeholder="Type here to Chat ..." class="input-field">
                 <button type="submit" class="btn btn-primary send-button" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
                 <button type="button" class="btn btn-primary send-button" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
             </div>
@@ -104,45 +104,28 @@
     // Add event listener to form
     document.getElementById('chat-form').addEventListener('submit', submitQuestion);
 
-    // Function to fetch the initial chatbot message when the page is loaded
-    function fetchInitialChatbotMessage(initialMessage) {
-        // Create a new FormData object
-        var formData = new FormData();
-        // Append the initial message to the FormData object
-        formData.append('user_input', initialMessage);
-
-        fetch('/cavbot', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Render and display the initial chatbot message in chat history
-            var initialBotResponse = renderMarkdown(data.response);
-            var chatHistory = document.getElementById('chat-history');
-            chatHistory.innerHTML += `<li class="chatbot-message bot-message">${initialBotResponse}</li>`;
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    // document.addEventListener('DOMContentLoaded', function() {
-    //     // Call fetchInitialChatbotMessage with "Hi" as the initial message
-    //     fetchInitialChatbotMessage("Hi");
-    // });
+    document.addEventListener('DOMContentLoaded', function() {
+        // Call sendMessageToGemini with "Hi" as the initial message
+        sendMessageToGemini("Hi");
+    });
 
     // Add click event listener to the search button
     searchBtn.addEventListener('click', function() {
         // Send the hardcoded message to Gemini
-        sendMessageToGemini();
+        message = "Give Me Search Query";
+        sendMessageToGemini(message);
     });
 
-    // Function to send message to Gemini
-    function sendMessageToGemini() {
+    // Function to send message to Gemini and display response in chat
+    function sendMessageToGemini(message) {
         console.log("Sending message to Gemini...");
         // Create a new FormData object
         var formData = new FormData();
         // Append the hardcoded message to the FormData object
-        formData.append('user_input', "Just Give me Search Query and nothing else, don't even say sure thing or anything, just the search query");
+        formData.append('user_input', message);
+
+        // Displaying Auto User Message in Chat
+        displayUserMessageInChat(message);
 
         // Send message to Flask route for Gemini
         fetch('/cavbot', {
@@ -152,29 +135,74 @@
         .then(response => response.json())
         .then(data => {
             console.log("Received response from Gemini:", data);
-            // Check if Gemini response contains search query
-            if (data.response) {
-                console.log("Sending search query to /search API:", data.response);
-                // Send Gemini's response directly to /search API
-                fetch('/search', {
-                    method: 'POST',
-                    body: new FormData().append('search_query', data.response)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Received response from /search API:", data);
-                    // Load the search section of home.html with the search results
-                    loadSearchSection(data.query);
-                })
-                .catch(error => console.error('Error:', error));
-            } else {
-                console.error('Error: Search query not found in Gemini response');
-            }
+            // Display Gemini's response in chat
+            displayResponseInChat(data.response);
         })
         .catch(error => console.error('Error:', error));
     }
 
+    // Function to display response in chat
+    function displayUserMessageInChat(message) {
 
+        // Display bot's response in chat history
+        var chatHistory = document.getElementById('chat-history');
+        chatHistory.innerHTML += `<li class="chatbot-message user-message">${message}</li>`;
+
+        // Scroll to bottom of chat body
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    // Function to display response in chat
+    function displayResponseInChat(response) {
+        // Render bot's response from Markdown to HTML
+        var botResponseHTML = renderMarkdown(response);
+
+        // Display bot's response in chat history
+        var chatHistory = document.getElementById('chat-history');
+        chatHistory.innerHTML += `<li class="chatbot-message bot-message">${botResponseHTML}</li>`;
+
+        // Scroll to bottom of chat body
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+
+    // Function to send message to Gemini
+    // function sendMessageToGemini() {
+    //     console.log("Sending message to Gemini...");
+    //     // Create a new FormData object
+    //     var formData = new FormData();
+    //     // Append the hardcoded message to the FormData object
+    //     formData.append('user_input', "Just Give me Search Query and nothing else, don't even say sure thing or anything, just the search query");
+
+    //     // Send message to Flask route for Gemini
+    //     fetch('/cavbot', {
+    //         method: 'POST',
+    //         body: formData
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         console.log("Received response from Gemini:", data);
+    //         // Check if Gemini response contains search query
+    //         if (data.response) {
+    //             console.log("Sending search query to /search API:", data.response);
+    //             // Send Gemini's response directly to /search API
+    //             fetch('/search', {
+    //                 method: 'POST',
+    //                 body: new FormData().append('search_query', data.response)
+    //             })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 console.log("Received response from /search API:", data);
+    //                 // Load the search section of home.html with the search results
+    //                 loadSearchSection(data.query);
+    //             })
+    //             .catch(error => console.error('Error:', error));
+    //         } else {
+    //             console.error('Error: Search query not found in Gemini response');
+    //         }
+    //     })
+    //     .catch(error => console.error('Error:', error));
+    // }
 
 </script>
 

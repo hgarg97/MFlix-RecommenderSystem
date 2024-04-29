@@ -58,7 +58,7 @@
             {% set similar_movie = get_movie_details(movie_id) %}
             <div class="col-md-2">
                 <a href="{{ url_for('movie_details', movie_id=similar_movie.movieId) }}">
-                    <div class="card mb-3">
+                    <div class="card mb-3" style="height: 175px;">
                         <!-- <img src="{{ similar_movie.poster_working_url }}" class="card-img-top" alt="Movie Poster !!"> -->
                         <div class="card-body">
                             <h5 class="card-title">{{ similar_movie.title }}</h5>
