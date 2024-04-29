@@ -6,12 +6,11 @@ MFlix is a movie recommender system designed to assist users in discovering pers
 
 ## Features
 
-1. **AI Chatbot Interaction**: Engage with an AI chatbot to provide preferences and receive tailored movie recommendations.
-2. **Top 5 Recommendations**: Display personalized movie recommendations based on the user's preferences and historical data.
-3. **Search Functionality**: Search for movies within the database to explore details and receive similar recommendations.
-4. **Image Processing for Recommendations**: Utilize image processing techniques to recommend movies based on poster similarity (Subject to data availability).
-5. **Sentiment Analysis-based Recommendations**: Analyze movie reviews to provide recommendations based on positive and negative sentiments.
-6. **Integration of Multiple Recommendation Algorithms**: Combine content-based, collaborative, matrix factorization, and sentiment analysis-based filtering for accurate recommendations.
+1. **AI Chatbot Interaction**: Engage with an AI chatbot named CavBot to provide preferences and receive tailored movie recommendations.
+2. **Search Functionality**: Search for movies within the database to explore details and receive similar recommendations.
+3. **Image Processing for Recommendations**: Utilize image processing techniques to recommend movies based on poster similarity using Image2Vec ResNet-18 Model.
+4. **Ratings Based Genre Recommendations**: Genre based top recommendations using the past-user Ratings.
+5. **Integration of Multiple Recommendation Algorithms**: Combine content-based, collaborative, matrix factorization, and sentiment analysis-based filtering for accurate recommendations.
 
 ## Why MFlix?
 
@@ -21,30 +20,27 @@ MFlix is a movie recommender system designed to assist users in discovering pers
 
 ## Data Sources
 
-- IMDB
 - MovieLens
+- IMDB
 - Other publicly available datasets
 
 ## Core Algorithms
 
 - BERT for text-based recommendation analysis
+- Google Gemini Powered ChatBot Integration
+- Image-to-vector
+- Matrix factorization
 - Content-based filtering
 - Collaborative filtering
-- Matrix factorization
-- Image-to-vector
-- Sentiment analysis
 
 ## Technologies Used
 
 - BERT for text analysis
+- ResNet-18 for Image2Vec
 - Various recommender system algorithms
 - Frontend and backend development tools
-- Flask or Django for the UI development
+- Flask for the UI development
 - Gemini API for chatbot integration
-
-## Demonstration
-
-We will provide a live demonstration of the MFlix website during the presentation. Additionally, we may conduct a satisfaction survey to gather feedback from users.
 
 ## Contributors
 
