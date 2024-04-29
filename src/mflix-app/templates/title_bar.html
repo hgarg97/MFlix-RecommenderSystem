@@ -1,0 +1,55 @@
+<!-- templates/title_bar.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/5b1cd61553.js" crossorigin="anonymous"></script>
+    <title>MFlix App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Add your custom CSS or link to your icon font here -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='title.png') }}" type="image/png">
+    <style>
+        .navbar {
+            background-color: #343a40; /* Dark background color */
+        }
+        .navbar-brand {
+            color: #fff; /* White text color */
+        }
+        body {
+            margin-top: 20px; /* Add space below the title bar */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <!-- Use the navbar-brand class to style the logo -->
+        <a class="navbar-brand" href="/home">
+            <img src="{{ url_for('static', filename='logo2.jpg') }}" width="30" height="30" class="d-inline-block align-top" alt="MFlix Logo">
+            MFlix - Your Movie Recommender
+        </a>
+        <div>
+            {% if authenticated %}
+                <!-- Show the logout button only if the user is authenticated -->
+                <button id="logoutBtn" class="btn btn-outline-secondary" title="Sign Out">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- JavaScript code for logout functionality -->
+    <script>
+        // Check if the logout button exists before adding event listener
+        var logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                // Redirect the user to the logout route
+                window.location.href = "{{ url_for('login') }}";
+            });
+        }
+    </script>
+</body>
+</html>

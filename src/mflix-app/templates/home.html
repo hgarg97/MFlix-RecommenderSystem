@@ -1,0 +1,114 @@
+{% include 'title_bar.html' %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot_style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommender - Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add your custom CSS here -->
+    <!-- Search bar for movie search -->
+</head>
+
+<body>
+    <div class="container" style="padding: 20px;">
+        <div class="search-container">
+            <form action="{{ url_for('search_movies') }}" method="POST">
+                <div class="form-group row">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Type your Query..." name="search_query">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary md-2" style="background-color: #1F6E8E;">Recommend</button>
+                    </div>
+                </div>
+            </form>            
+        </div>
+
+        <!-- Section for user's search results -->
+        {% if search_results %}
+        <div class="section-container">
+            <h3 style="color: blanchedalmond;"><i class="fa-solid fa-magnifying-glass"></i> Your Query Recommendations</h3>
+            <div class="row">
+                <!-- Loop over movie data to populate movie cards -->
+                {% for id in search_results %}
+                {% set movie = get_movie_details(id) %}
+                <div class="col-md-2">
+                    <a href="{{ url_for('movie_details', movie_id=movie.movieId) }}">
+                        <div class="card mb-3">
+                            <img src="{{ movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Section for global top 5 movies -->
+        <div class="section-container">
+            <h3 style="color: blanchedalmond;"><i class="fa-solid fa-globe"></i> Global Top 5 Recommendations</h3>
+            <div class="row">
+                <!-- Loop over movie data to populate movie cards -->
+                {% for id in movie_ids_rec5 %}
+                {% set movie = get_movie_details(id) %}
+                <div class="col-md-2">
+                    <a href="{{ url_for('movie_details', movie_id=movie.movieId) }}">
+                        <div class="card mb-3">
+                            <img src="{{ movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Section for Kids top 5 movie recommendations -->
+        <div class="section-container">
+            <h3 style="color: blanchedalmond;"><i class="fa-solid fa-child"></i> Top 5 Kids Recommendations</h3>
+            <div class="row">
+                <!-- Loop over movie data to populate movie cards -->
+                {% for id in movie_ids_animated %}
+                {% set movie = get_movie_details(id) %}
+                <div class="col-md-2">
+                    <a href="{{ url_for('movie_details', movie_id=movie.movieId) }}">
+                        <div class="card mb-3">
+                            <img src="{{ movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Include chatbot HTML -->
+    {% include 'chatbot.html' %}
+
+    <!-- Script for toggling the chatbot -->
+    <script>
+        document.getElementById('toggleChatbotBtn').addEventListener('click', function () {
+            var chatbotBody = document.getElementById('chatbot-body');
+            if (chatbotBody.style.display === 'none') {
+                chatbotBody.style.display = 'block';
+            } else {
+                chatbotBody.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

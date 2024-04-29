@@ -1,0 +1,57 @@
+.card {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-body {
+    padding: 20px;
+    background-color: blanchedalmond;;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.section-container {
+    margin-bottom: 30px;
+}
+
+.section-container h3 {
+    margin-bottom: 15px;
+}
+
+/* Search input field */
+.search-container input[type="text"] {
+    padding: 10px; /* Add padding to the input field */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Add border radius */
+    outline: none; /* Remove outline */
+}
+
+/* Search button */
+.search-container button[type="submit"] {
+    background-color: #1F6E8E; /* Background color for button */
+    color: #fff; /* Text color for button */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Add border radius */
+    padding: 10px 20px; /* Add padding to the button */
+    margin-left: 10px; /* Add margin to separate from input field */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s; /* Add transition effect */
+}
+
+/* Adjust button hover and focus styles */
+.search-container button[type="submit"]:hover,
+.search-container button[type="submit"]:focus {
+    background-color: #155E7E;
+    outline: none;
+}

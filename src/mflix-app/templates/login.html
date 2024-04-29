@@ -1,0 +1,60 @@
+<!-- templates/login.html -->
+
+{% include 'title_bar.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="MFlix Logo">
+        MFlix - Your Movie Recommender
+    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add your custom CSS here -->
+    <style>
+        body, html {
+            height: 100%;
+        }
+        .vertical-center {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column; /* Center items vertically and horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div class="container vertical-center">
+        <!-- Display logo -->
+        <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="MFlix Logo" style="width: 400px; height: auto; padding: 20px">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Login to MFlix Recommender</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if error_message %}
+                        <!-- Display error message if authentication failed -->
+                        <div class="alert alert-danger" role="alert">
+                            {{ error_message }}
+                        </div>
+                        {% endif %}
+                        <form method="POST" action="/home">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="email" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="Password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

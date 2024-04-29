@@ -1,0 +1,120 @@
+/* chatbot_style.css */
+
+.chatbot-container {
+    position: fixed;
+    top: 50%;
+    right: 20px; /* Position chatbot on the right side */
+    transform: translateY(-50%); /* Center chatbot vertically */
+    width: 400px; /* Set width of chatbot */
+    background-color: #f0f0f0; /* Background color for chatbot */
+    box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1); /* Add box shadow for the container */
+    z-index: 1000; /* Set z-index to ensure it's on top of other content */
+    max-height: 80vh; /* Set maximum height with viewport height unit */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.chatbot-title-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #1F6E8E; /* Title bar background color */
+    color: #fff; /* Title bar text color */
+}
+
+.chatbot-title {
+    margin: 0;
+}
+
+.chatbot-body {
+    display: flex; /* Use flexbox layout */
+    flex-direction: column; /* Arrange items vertically */
+    padding: 10px;
+    overflow-y: auto; /* Enable scrolling for chat messages */
+    max-height: calc(80vh - 40px); /* Adjust for title bar and padding */
+}
+
+.chatbot-input {
+    margin-top: auto;
+    display: flex; /* Use flexbox layout */
+    align-items: center; /* Center items vertically */
+}
+
+.chatbot-input input[type="text"] {
+    flex: 1; /* Allow input field to grow and fill remaining space */
+}
+
+.input-field {
+    width: calc(100% - 110px); /* Adjust the width as needed */
+    padding: 10px; /* Add padding to the input field */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Add border radius */
+    outline: none; /* Remove outline */
+}
+
+/* CSS for send button */
+.send-button {
+    background-color: #1F6E8E; /* Background color for button */
+    color: #fff; /* Text color for button */
+    border: none; /* Remove border */
+    border-radius: 20px; /* Add border radius */
+    padding: 10px 20px; /* Add padding to the button */
+    margin-left: 10px; /* Add margin to separate from input field */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s; /* Add transition effect */
+}
+
+.send-button:hover {
+    background-color: #155E7E; /* Darker background color on hover */
+}
+
+.chatbot-messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 60vh; /* Adjust as needed */
+    overflow-y: auto;
+}
+
+.chatbot-message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to messages */
+    position: relative; /* Position relative for absolute positioning of pseudoelements */
+}
+
+.user-message {
+    background-color: rgb(238, 226, 202); /* Set background color for user message */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Add lighter shadow to user message */
+    text-align: right; /* Align user messages to the right */
+}
+
+.bot-message {
+    background-color: rgb(251, 194, 109); /* Adjust color for bot messages */
+    color: #333; /* Adjust text color for bot messages */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4); /* Add darker shadow to chatbot message */
+}
+
+.loader {
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 40px; /* Increased width */
+    height: 40px; /* Increased height */
+    animation: spin 1s linear infinite;
+    display: none; /* Initially hidden */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

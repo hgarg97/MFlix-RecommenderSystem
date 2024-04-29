@@ -1,0 +1,109 @@
+{% include 'title_bar.html' %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ movie.title }} - Movie Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add your custom CSS here -->
+</head>
+<body>
+    <div class="container" style="padding: 20px;">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="{{ movie.poster_working_url }}" class="img-fluid" alt="Movie Poster">
+            </div>
+            <div class="col-md-8">
+                <h1 style="color: rgb(228, 176, 108);">{{ movie.title }}</h1>
+                <div class="row">
+                    <div class="col">
+                        <h6 style="color: rgb(228, 209, 184);"> <i class="fas fa-clock"></i> {{ movie.runtime }}</h6>
+                    </div>
+                    <div class="col">
+                        <h6 style="color: rgb(228, 209, 184);"><i class="fa-solid fa-calendar-day"></i> {{ movie.release_date }}</h6>
+                    </div>
+                    <div class="col">
+                        <h6 style="color: rgb(228, 209, 184);"><i class="fa-solid fa-sack-dollar"></i> ${{ movie.budget }}</h6>
+                    </div>
+                </div>
+                <br>
+                <h5 style="color: rgb(228, 209, 184);">{{ movie.overview }}</h5>
+                <h5 style="color: rgb(228, 209, 184);">Genres : {{ movie.genres }}</h5>
+                <h5 style="color: rgb(228, 209, 184);">Cast : {{ movie.cast }}</h5>
+            </div>
+        </div>
+
+        <!-- Movies Like This  -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr style="border-top: 2px solid rgb(228, 209, 184);">
+            </div>
+        </div>
+        <div class="row justify-content-center"> <!-- Aligning "More Like This" heading to center -->
+            <div class="col-md-8 text-center"> <!-- Using text-center class to center the text -->
+                <h3 style="color: rgb(228, 176, 108);"><i class="fa-solid fa-panorama"></i> Movies Like This</h3>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr style="border-top: 2px solid rgb(228, 209, 184);">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- Loop over movie data to populate movie cards -->
+            {% for movie_id in movies_like_this_dict[movie.movieId] %}
+            {% set similar_movie = get_movie_details(movie_id) %}
+            <div class="col-md-2">
+                <a href="{{ url_for('movie_details', movie_id=similar_movie.movieId) }}">
+                    <div class="card mb-3" style="height: 175px;">
+                        <!-- <img src="{{ similar_movie.poster_working_url }}" class="card-img-top" alt="Movie Poster !!"> -->
+                        <div class="card-body">
+                            <h5 class="card-title">{{ similar_movie.title }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Posters Like This for Images -->
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr style="border-top: 2px solid rgb(228, 209, 184);">
+            </div>
+        </div>
+        {% if movie.movieId in posters_like_this_dict %}
+        <div class="row justify-content-center"> <!-- Aligning "More Like This" heading to center -->
+            <div class="col-md-8 text-center"> <!-- Using text-center class to center the text -->
+                <h3 style="color: rgb(228, 176, 108);"><i class="fa-solid fa-panorama"></i> Posters Like This</h3>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr style="border-top: 2px solid rgb(228, 209, 184);">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- Loop over movie data to populate movie cards -->
+            {% for movie_id in posters_like_this_dict[movie.movieId] %}
+            {% set similar_movie = get_movie_details(movie_id) %}
+            <div class="col-md-2">
+                <a href="{{ url_for('movie_details', movie_id=similar_movie.movieId) }}">
+                    <div class="card mb-3">
+                        <img src="{{ similar_movie.poster_working_url }}" class="card-img-top" alt="Movie Poster">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ similar_movie.title }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
+

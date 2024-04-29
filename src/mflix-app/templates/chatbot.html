@@ -1,0 +1,208 @@
+<script src="https://kit.fontawesome.com/5b1cd61553.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chatbot_style.css') }}">
+
+<!-- Chatbot container HTML -->
+<div class="chatbot-container" id="chatbot-container">
+    <div class="chatbot-title-bar">
+        <h4 class="chatbot-title"><i class="fa-solid fa-robot"></i> CavBot</h4>
+        <button class="btn btn-sm btn-light" id="toggleChatbotBtn">
+            <i class="fas fa-chevron-up" id="chevronIcon"></i>
+        </button>
+    </div>
+    <div class="chatbot-body" id="chatbot-body">
+        <ul class="chatbot-messages" id="chat-history">
+            <!-- Chat history will be displayed here -->
+        </ul>
+        <!-- Loader -->
+        <div id="loader" class="loader"></div>
+        <!-- Form for user input -->
+        <form id="chat-form">
+            <div class="chatbot-input">
+                <input type="text" id="userInput" name="user_input" placeholder="Type here to Chat ..." class="input-field">
+                <button type="submit" class="btn btn-primary send-button" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+                <button type="button" class="btn btn-primary send-button" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
+
+<script>
+    //  JavaScript code for toggling the chevron icon
+    // Get references to the toggle button and chevron icon
+    var toggleBtn = document.getElementById('toggleChatbotBtn');
+    var chevronIcon = document.getElementById('chevronIcon');
+    var loader = document.getElementById('loader');
+    var sendBtn = document.getElementById('sendBtn');
+    var searchBtn = document.getElementById('searchBtn');
+
+    // Add click event listener to the toggle button
+    toggleBtn.addEventListener('click', function() {
+        // Toggle the rotation class of the chevron icon
+        chevronIcon.classList.toggle('fa-chevron-up');
+        chevronIcon.classList.toggle('fa-chevron-down');
+    });
+
+    // Function to render Markdown-formatted text
+    function renderMarkdown(text) {
+        try {
+            // Convert Markdown text to HTML
+            var converter = new showdown.Converter();
+            var html = converter.makeHtml(text);
+            return html;
+        } catch (error) {
+            console.error('Error rendering Markdown:', error);
+            return text; // Return original text if there is an error
+        }
+    }
+
+    // Function to handle form submission
+    function submitQuestion(event) {
+        event.preventDefault();
+        var form = event.target;
+        var formData = new FormData(form);
+        var userInput = formData.get('user_input');
+
+        // Show loader
+        loader.style.display = 'block';
+        // Disable send button
+        sendBtn.disabled = true;
+
+        // Send question to Flask route
+        fetch('/cavbot', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+             // Hide loader
+             loader.style.display = 'none';
+            // Enable send button
+            sendBtn.disabled = false;
+            // Convert Unicode escape sequences to actual emojis
+            var botResponse = data.response.replace(/\\u[\dA-F]{4}/gi, match => String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16)));
+
+            // Render bot's response from Markdown to HTML
+            var botResponseHTML = renderMarkdown(botResponse);
+
+            // Display bot's response in chat history
+            var chatHistory = document.getElementById('chat-history');
+            chatHistory.innerHTML += `<li class="chatbot-message user-message">${userInput}</li>`;
+            chatHistory.innerHTML += `<li class="chatbot-message bot-message">${botResponseHTML}</li>`;
+
+            // Scroll to bottom of chat body
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // Clear input field
+            document.getElementById('userInput').value = '';
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Add event listener to form
+    document.getElementById('chat-form').addEventListener('submit', submitQuestion);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Call sendMessageToGemini with "Hi" as the initial message
+        sendMessageToGemini("Hi");
+    });
+
+    // Add click event listener to the search button
+    searchBtn.addEventListener('click', function() {
+        // Send the hardcoded message to Gemini
+        message = "Give Me Search Query";
+        sendMessageToGemini(message);
+    });
+
+    // Function to send message to Gemini and display response in chat
+    function sendMessageToGemini(message) {
+        console.log("Sending message to Gemini...");
+        // Create a new FormData object
+        var formData = new FormData();
+        // Append the hardcoded message to the FormData object
+        formData.append('user_input', message);
+
+        // Displaying Auto User Message in Chat
+        displayUserMessageInChat(message);
+
+        // Send message to Flask route for Gemini
+        fetch('/cavbot', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Received response from Gemini:", data);
+            // Display Gemini's response in chat
+            displayResponseInChat(data.response);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Function to display response in chat
+    function displayUserMessageInChat(message) {
+
+        // Display bot's response in chat history
+        var chatHistory = document.getElementById('chat-history');
+        chatHistory.innerHTML += `<li class="chatbot-message user-message">${message}</li>`;
+
+        // Scroll to bottom of chat body
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    // Function to display response in chat
+    function displayResponseInChat(response) {
+        // Render bot's response from Markdown to HTML
+        var botResponseHTML = renderMarkdown(response);
+
+        // Display bot's response in chat history
+        var chatHistory = document.getElementById('chat-history');
+        chatHistory.innerHTML += `<li class="chatbot-message bot-message">${botResponseHTML}</li>`;
+
+        // Scroll to bottom of chat body
+        chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+
+    // Function to send message to Gemini
+    // function sendMessageToGemini() {
+    //     console.log("Sending message to Gemini...");
+    //     // Create a new FormData object
+    //     var formData = new FormData();
+    //     // Append the hardcoded message to the FormData object
+    //     formData.append('user_input', "Just Give me Search Query and nothing else, don't even say sure thing or anything, just the search query");
+
+    //     // Send message to Flask route for Gemini
+    //     fetch('/cavbot', {
+    //         method: 'POST',
+    //         body: formData
+    //     })
+    //     .then(response => response.json())
+    //     .then(data => {
+    //         console.log("Received response from Gemini:", data);
+    //         // Check if Gemini response contains search query
+    //         if (data.response) {
+    //             console.log("Sending search query to /search API:", data.response);
+    //             // Send Gemini's response directly to /search API
+    //             fetch('/search', {
+    //                 method: 'POST',
+    //                 body: new FormData().append('search_query', data.response)
+    //             })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //                 console.log("Received response from /search API:", data);
+    //                 // Load the search section of home.html with the search results
+    //                 loadSearchSection(data.query);
+    //             })
+    //             .catch(error => console.error('Error:', error));
+    //         } else {
+    //             console.error('Error: Search query not found in Gemini response');
+    //         }
+    //     })
+    //     .catch(error => console.error('Error:', error));
+    // }
+
+</script>
+
