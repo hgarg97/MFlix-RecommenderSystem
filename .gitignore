@@ -14,3 +14,10 @@ src/mflix-app/static/encodings_description.pickle
 src/mflix-app/static/encodings_title.pickle
 src/mflix-app/static/model.pickle
 src/mflix-app/.env
+src/mflix-app/static/Embeddings_Old/encodings_description.pickle
+src/mflix-app/static/Embeddings_Old/encodings_title.pickle
+src/mflix-app/static/Embeddings_Old/model.pickle
+src/mflix-app/static/Embeddings_Old/encodings_description3000.pickle
+src/mflix-app/static/Embeddings_Old/encodings_title3000.pickle
+src/mflix-app/static/Embeddings_Old/model3000.pickle
+src/mflix-app/static/Movies_dataset.csv

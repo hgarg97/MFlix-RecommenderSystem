@@ -26,11 +26,14 @@ users = {
 
 authenticated = False
 
-movie_ids_your5 = [2, 134234, 20, 96079, 748]  # Example movie IDs
-movie_ids_rec5 = [3450, 3629, 5096, 5720, 58559]
+#movie_ids_your5 = [2, 134234, 20, 96079, 748]  # Example movie IDs
+movie_ids_animated = [5096, 88345, 52694, 131080, 136367]
+movie_ids_rec5 = [748, 2, 3629, 96079, 58559]
 
 # Load data from Excel file into a pandas DataFrame
-movies_df = pd.read_csv('static/movies_data3200.csv')
+# movies_df = pd.read_csv('static/movies_data3200.csv')
+
+movies_df = pd.read_csv('static/Movies_dataset.csv')
 
 # Loading Image2Vec Similarity JSON 
 with open('static/sorted_similarity.json', 'r') as file:
@@ -39,6 +42,14 @@ with open('static/sorted_similarity.json', 'r') as file:
 posters_like_this_dict = {}
 for key, value in sorted_similarity.items():
     posters_like_this_dict[int(key)] = value[:5]
+
+# Loading MovieLikeThis JSON
+with open('static/top_10_neighbors.json','r') as file:
+    top_neighbors = json.load(file)
+
+movies_like_this_dict = {}
+for key, value in top_neighbors.items():
+    movies_like_this_dict[int(key)] = [int(movie_id) for movie_id in value[:5]]
 
 # Integrating DistilBert with Search
 with open('static/encodings_description.pickle','rb') as file:
@@ -68,6 +79,11 @@ def find_similar_items(query: str, metadata: pd.DataFrame, model: SentenceTransf
 def get_movie_details(movie_id):
     movie_details = movies_df[movies_df['movieId'] == movie_id].iloc[0]
 
+    # Replace 'NF' with a default photo path if final_poster_url is 'NF'
+    poster_working_url = movie_details['final_poster_url']
+    if poster_working_url == 'NF':
+        poster_working_url = 'static/logo_resize1.jpg'
+
     # Extract genres names
     genres = eval(movie_details['genres'])
     genre_names = [genre['name'] for genre in genres]
@@ -86,28 +102,23 @@ def get_movie_details(movie_id):
     release_date = rel_date_obj.strftime("%d %b %Y")
 
     # Convert runtime to hour and minute format
-    runtime_hours = movie_details['runtime'] // 60
-    runtime_minutes = movie_details['runtime'] % 60
+    runtime_hours = int(movie_details['runtime'] // 60)
+    runtime_minutes = int(movie_details['runtime'] % 60)
     runtime = f"{runtime_hours}h {runtime_minutes}m"
 
     # Create a dictionary with all the extracted information
     movies_info = {
         'movieId' : movie_details['movieId'],
         'title': movie_details['title'],
-        'poster_working_url': movie_details['poster_working_url'],
-        'original_language': movie_details['original_language'],
+        'poster_working_url': poster_working_url,
+        'spoken_languages': movie_details['spoken_languages'],
         'overview': movie_details['overview'],
-        'popularity': movie_details['popularity'],
-        'budget': movie_details['budget'],
+        'budget': int(movie_details['budget']),
         'genres': genres_str,
         'production_companies': movie_details['production_companies'],
         'production_countries': movie_details['production_countries'],
         'release_date': release_date,  # Formatted release date
-        'revenue': movie_details['revenue'],
         'runtime': runtime,  # Runtime in hours and minutes format
-        'spoken_languages': movie_details['spoken_languages'],
-        'vote_average': movie_details['vote_average'],
-        'vote_count': movie_details['vote_count'],
         'keywords': movie_details['keywords'],
         'cast': cast_str,
         'crew': movie_details['crew']
@@ -128,7 +139,7 @@ def home():
         if email in users and users[email] == password:
             authenticated = True
 
-            return render_template('home.html', authenticated=authenticated, movie_ids_your5=movie_ids_your5, movie_ids_rec5=movie_ids_rec5, posters_like_this_dict = posters_like_this_dict, get_movie_details=get_movie_details)
+            return render_template('home.html', authenticated=authenticated, movie_ids_animated=movie_ids_animated, movie_ids_rec5=movie_ids_rec5, movies_like_this_dict = movies_like_this_dict, posters_like_this_dict = posters_like_this_dict, get_movie_details=get_movie_details)
         else:
             error_message = "Incorrect email or password. Please try again."
             return render_template('login.html', error_message=error_message)    
@@ -138,13 +149,13 @@ def home():
 @app.route('/movie/<int:movie_id>')
 def movie_details(movie_id):
     movie = get_movie_details(movie_id)
-    return render_template('movie_details.html', movie=movie, authenticated=authenticated, posters_like_this_dict=posters_like_this_dict, get_movie_details=get_movie_details)
+    return render_template('movie_details.html', movie=movie, authenticated=authenticated, movies_like_this_dict = movies_like_this_dict, posters_like_this_dict=posters_like_this_dict, get_movie_details=get_movie_details)
 
 @app.route('/search', methods=['POST'])
 def search_movies():
     search_query = request.form['search_query']
     search_results = find_similar_items(search_query, movies_df)
-    return render_template('home.html', authenticated=authenticated, movie_ids_your5=movie_ids_your5, movie_ids_rec5=movie_ids_rec5, posters_like_this_dict=posters_like_this_dict, search_results=search_results, get_movie_details=get_movie_details)
+    return render_template('home.html', authenticated=authenticated, movie_ids_animated=movie_ids_animated, movie_ids_rec5=movie_ids_rec5, movies_like_this_dict = movies_like_this_dict, posters_like_this_dict=posters_like_this_dict, search_results=search_results, get_movie_details=get_movie_details)
 
 # Gemini Chatbot Integration
 # Set up the model
@@ -176,9 +187,8 @@ safety_settings = [
 
 system_instruction = "Friendly Lively tone"
 
-gemini_model = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
+gemini_model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                               generation_config=generation_config,
-                              system_instruction=system_instruction,
                               safety_settings=safety_settings)
 
 chat = gemini_model.start_chat(history=[
